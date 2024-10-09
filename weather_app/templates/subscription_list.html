@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <h2>Your Subscriptions</h2>
+    <ul>
+        {% for subscription in subscriptions %}
+            <li>
+                {{ subscription.city }} ({{ subscription.get_period_display }}) - {{ subscription.get_method_display }}
+                <a href="{% url 'edit_subscription' subscription.id %}">Edit</a>
+                <a href="{% url 'delete_subscription' subscription.id %}">Delete</a>
+            </li>
+        {% endfor %}
+
+        <hr> {# розділяюча полоса#}
+
+        <ul>
+        {% for subscription in subscriptions %}
+            <li id="{{ subscription.city }}">
+                {{ subscription.city }} - <span class="temperature">Завантаження...</span>
+            </li>
+        {% endfor %}
+        </ul>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('ul li').forEach(function(listItem) {
+                const city = listItem.id;
+                fetch(`/api_get_weather/?search_query=${city}`, {
+                    method: 'GET',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const temperatureElement = listItem.querySelector('.temperature');
+                    if ('temperature' in data) {
+                        temperatureElement.innerText = `Температура: ${data.temperature}°C`;
+                    } else {
+                        temperatureElement.innerText = `Помилка: ${data.error}`;
+                    }
+                })
+                .catch(error => {
+                    console.error(`Помилка під час виконання запиту для міста ${city}:`, error);
+                });
+            });
+        });
+        </script>
+    </ul>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Select a City - Weather{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <h2>Select a City:</h2>
+
+            <div class="card">
+
+                <form method="get" action="{% url 'get_weather' %}">
+                    {{ form }}
+                    <button type="submit">Search</button>
+                </form>
+
+                {% if found_cities %}
+                    {% if found_cities|length == 1 %}
+                        <h2>Current Temperature in {{ city }}:</h2>
+                        <p>{{ temperature }} °C</p>
+
+                        <form method="post" action="{% url 'subscribe' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="city" value="{{ city }}">
+                            <label for="period">Select Notification Period:</label>
+                            <select name="period">
+                                <option value="1">1 hour</option>
+                                <option value="3">3 hours</option>
+                                <option value="6">6 hours</option>
+                                <option value="12">12 hours</option>
+                            </select>
+                            <label for="method">Select Notification Method:</label>
+                            <select name="method">
+                                <option value="email">Email</option>
+                                <option value="push">Push Notification</option>
+                                <option value="webhook">Webhook</option>
+                            </select>
+                            <button type="submit">Subscribe</button>
+                        </form>
+
+                    {% else %}
+                        <h2>Search Results:</h2>
+                        <ul>
+                            {% for city_info in found_cities %}
+                                <li><a href="{% url 'get_weather' %}?search_query={{ city_info.city_name }}">{{ city_info.city_name }} ({{ city_info.country_code }})</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% elif temperature %}
+                    <h2>Current Temperature in {{ city }}:</h2>
+                    <p>{{ temperature }} °C</p>
+
+                    <form method="post" action="{% url 'subscribe' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="city" value="{{ city }}">
+                        <label for="period">Select Notification Period:</label>
+                        <select name="period">
+                            <option value="1">1 hour</option>
+                            <option value="3">3 hours</option>
+                            <option value="6">6 hours</option>
+                            <option value="12">12 hours</option>
+                        </select>
+                        <label for="method">Select Notification Method:</label>
+                        <select name="method">
+                            <option value="email">Email</option>
+                            <option value="push">Push Notification</option>
+                            <option value="webhook">Webhook</option>
+                        </select>
+                        <button type="submit">Subscribe</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

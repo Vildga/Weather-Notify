@@ -1,0 +1,29 @@
+{% extends 'base.html'%}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block content %}
+    <div class="center-container">
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <form action="{% url 'login' %}" method="post" class="center-form">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <input type="submit" value="Login" class="button">
+
+            <a href="{% url 'social:begin' 'google-oauth2' %}" class="social-button google-button">Войти через Google</a>
+            <a href="{% url 'social:begin' 'github' %}" class="social-button github-button">Войти через GitHub</a>
+        </form>
+
+    </div>
+{% endblock %}

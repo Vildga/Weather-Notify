@@ -1,0 +1,13 @@
+.logo {
+    max-height: 40px;
+    width: auto;
+}
+
+.navbar {
+    border-bottom: 2px solid #0373fc;
+    display: flex;
+    align-items: center;
+    height: 60px;
+    padding: 0 15px;
+    box-sizing: border-box;
+}

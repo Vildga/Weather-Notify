@@ -1,0 +1,43 @@
+
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <title>Registration</title>#}
+{#</head>#}
+{#<body>#}
+{#    <h2>Registration</h2>#}
+{#    <form method="post" action="{% url 'registration' %}" enctype="multipart/form-data">#}
+{#        {% csrf_token %}#}
+{#        {{ form.as_p }}#}
+{#        <button type="submit">Register</button>#}
+{#    </form>#}
+{#</body>#}
+{#</html>#}
+
+
+{% extends 'base.html' %}
+
+{% block title %}
+    Registration
+{% endblock %}
+
+{% block content %}
+    <div class="center-container">
+        <form method="post" action="{% url 'registration' %}" enctype="multipart/form-data" class="center-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="button">Register</button >
+        </form>
+    </div>
+    <div class="center-container">
+        <form method="post" action="{% url 'registration' %}" enctype="multipart/form-data" class="center-form">
+    <a href="{% url 'social:begin' 'google-oauth2' %}" class="social-button google-button">Войти через Google</a>
+    <a href="{% url 'social:begin' 'github' %}" class="social-button github-button">Войти через GitHub</a>
+        </form>
+    </div>
+{% endblock %}
+
+
+
+
+
