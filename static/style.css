@@ -1,13 +1,151 @@
-.logo {
-    max-height: 40px;
-    width: auto;
+/* Общий стиль для страницы */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f8ff;
 }
 
 .navbar {
     border-bottom: 2px solid #0373fc;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     height: 60px;
     padding: 0 15px;
     box-sizing: border-box;
+    margin-bottom: 20px;
+    background-color: #e0efff !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    max-height: 40px;
+    width: auto;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-nav .nav-link {
+    margin-left: 15px;
+    font-size: 16px;
+}
+
+.navbar-toggler {
+    border: none;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h2 {
+    font-size: 1.8em;
+    margin-bottom: 15px;
+    margin-left: auto;
+}
+
+.auth-container {
+    width: 350px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin: 0 auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.blue-bar {
+    width: 100%;
+    height: 4px;
+    background-color: #0373fc; /* Заменен зеленый на синий */
+    margin-bottom: 20px;
+}
+
+/* Form Input Fields */
+.input-field {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+input:focus {
+    outline: none;
+    border-color: #0373fc; /* Заменен зеленый на синий */
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #0373fc; /* Синий цвет для кнопки */
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 30px;
+}
+
+.auth-btn:hover {
+    background-color: #0056b3; /* Темно-синий для наведения */
+}
+
+.signup-text {
+    margin-top: 20px;
+}
+
+.signup-text a {
+    color: #0373fc; /* Синий цвет для ссылки */
+    text-decoration: none;
+}
+
+.signup-text a:hover {
+    text-decoration: underline;
+}
+
+/* Social Buttons */
+.social-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    color: white;
+    background-color: #4285F4; /* Синий цвет для социальных кнопок */
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin: 15px 0;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.social-button:hover {
+    background-color: #357ae8; /* Более темный синий при наведении */
+}
+
+.google-button {
+    background-color: #f0f0f0;
+    color: #4285F4; /* Синий цвет для текста кнопки Google */
+    border: 1px solid #d1d1d1;
+    margin-bottom: 50px;
+}
+
+.google-button:hover {
+    background-color: #e0e0e0;
+    border-color: #c1c1c1;
 }

@@ -1,43 +1,30 @@
-
-{#<html lang="en">#}
-{#<head>#}
-{#    <meta charset="UTF-8">#}
-{#    <title>Registration</title>#}
-{#</head>#}
-{#<body>#}
-{#    <h2>Registration</h2>#}
-{#    <form method="post" action="{% url 'registration' %}" enctype="multipart/form-data">#}
-{#        {% csrf_token %}#}
-{#        {{ form.as_p }}#}
-{#        <button type="submit">Register</button>#}
-{#    </form>#}
-{#</body>#}
-{#</html>#}
-
-
 {% extends 'base.html' %}
 
 {% block title %}
-    Registration
+    Sign Up
 {% endblock %}
 
 {% block content %}
-    <div class="center-container">
-        <form method="post" action="{% url 'registration' %}" enctype="multipart/form-data" class="center-form">
+    <div class="auth-container">
+        <h2>Sign Up</h2>
+        <div class="blue-bar"></div>
+
+        <form method="POST" action="{% url 'registration' %}">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="button">Register</button >
-        </form>
-    </div>
-    <div class="center-container">
-        <form method="post" action="{% url 'registration' %}" enctype="multipart/form-data" class="center-form">
-    <a href="{% url 'social:begin' 'google-oauth2' %}" class="social-button google-button">Войти через Google</a>
-    <a href="{% url 'social:begin' 'github' %}" class="social-button github-button">Войти через GitHub</a>
+            <div class="input-field">
+                {{ form.non_field_errors }}
+                {{ form.username.label_tag }} {{ form.username }} {{ form.username.errors }}
+                {{ form.first_name.label_tag }} {{ form.first_name }} {{ form.first_name.errors }}
+                {{ form.last_name.label_tag }} {{ form.last_name }} {{ form.last_name.errors }}
+                {{ form.email.label_tag }} {{ form.email }} {{ form.email.errors }}
+                {{ form.password1.label_tag }} {{ form.password1 }} {{ form.password1.errors }}
+                {{ form.password2.label_tag }} {{ form.password2 }} {{ form.password2.errors }}
+            </div>
+            <button type="submit" class="auth-btn">Sign Up</button>
+
+            <a href="{% url 'social:begin' 'google-oauth2' %}" class="social-button google-button">Or Sign Up with Google</a>
+
+            <p class="signup-text">Already have an account?<br><a href="{% url 'login' %}">Sign In Now</a></p>
         </form>
     </div>
 {% endblock %}
-
-
-
-
-

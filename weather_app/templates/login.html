@@ -1,29 +1,29 @@
 {% extends 'base.html'%}
 
 {% block title %}
-    Login
+    Sign In
 {% endblock %}
 
 {% block content %}
-    <div class="center-container">
-        {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
+    <div class="auth-container">
+        <h2>Sign In</h2>
+        <div class="blue-bar"></div>
 
-        <form action="{% url 'login' %}" method="post" class="center-form">
+        <form method="POST" action="{% url 'login' %}">
             {% csrf_token %}
+            <div class="input-field">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-field">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="auth-btn">Sign In</button>
 
-            {{ form.as_p }}
+            <a href="{% url 'social:begin' 'google-oauth2' %}" class="social-button google-button">Or Login with Google</a>
 
-            <input type="submit" value="Login" class="button">
-
-            <a href="{% url 'social:begin' 'google-oauth2' %}" class="social-button google-button">Войти через Google</a>
-            <a href="{% url 'social:begin' 'github' %}" class="social-button github-button">Войти через GitHub</a>
+            <p class="signup-text">Don't have an account?<br><a href="{% url 'registration' %}">Sign Up Now</a></p>
         </form>
-
     </div>
 {% endblock %}
