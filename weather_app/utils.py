@@ -51,3 +51,5 @@ def get_weather_for_city(city_name):
             return {'city_data': city_data, 'temperature': temperature}
         else:
             return None
+
+
