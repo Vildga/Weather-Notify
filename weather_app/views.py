@@ -56,27 +56,44 @@ def perform_search_in_csv(search_query):
     return found_cities
 
 
-def get_weather(request, city_name='Kiev'):
-    form = CitySearchForm(request.GET)
-    found_cities = []
-    temperature = None
+def home(request):
+    return render(request, 'home.html')
 
-    if form.is_valid():
-        search_query = form.cleaned_data['search_query']
-        found_cities = perform_search_in_csv(search_query)
 
-        if len(found_cities) == 1:
-            city_name = found_cities[0]['city_name']
-            url = f'https://api.weatherbit.io/v2.0/current?city={city_name}&key={env("WEATHER_API_KEY")}'
-            response = requests.get(url)
+def city_weather(request):
+    city = request.GET.get('search_query')
+    context = {}
+
+    if city:
+        weather_api_key = env('WEATHER_API_KEY')
+        url = f'https://api.weatherbit.io/v2.0/current?city={city}&key={weather_api_key}'
+        forecast_url = f'https://api.weatherbit.io/v2.0/forecast/daily?city={city}&key={weather_api_key}&days=5'
+
+        response = requests.get(url)
+        forecast_response = requests.get(forecast_url)
+
+        if response.status_code == 200 and forecast_response.status_code == 200:
             data = response.json()
-            temperature = data['data'][0]['temp']
+            forecast_data = forecast_response.json()
 
-    default_cities = DefaultCity.objects.all()
+            context['city'] = city
+            context['temperature'] = data['data'][0]['temp']
+            context['description'] = data['data'][0]['weather']['description']
 
-    context = {'temperature': temperature, 'city': city_name, 'default_cities': default_cities, 'form': form,
-               'found_cities': found_cities}
-    return render(request, 'weather.html', context)
+            forecast = []
+            for entry in forecast_data['data']:
+                day_forecast = {
+                    'date': entry['datetime'],
+                    'temperature': entry['temp'],
+                    'description': entry['weather']['description']
+                }
+                forecast.append(day_forecast)
+
+            context['forecast'] = forecast
+        else:
+            context['error'] = "City not found or unable to fetch weather data."
+
+    return render(request, 'city_weather.html', context)
 
 
 @login_required
@@ -178,7 +195,7 @@ def logout_view(request):
 
 def show_notifications(request):
     notifications = Notification.objects.all()
-    return render(request, 'weather.html', {'notifications': notifications})
+    return render(request, 'city_weather.html', {'notifications': notifications})
 
 
 def api_get_weather(request):

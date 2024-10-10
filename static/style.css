@@ -1,4 +1,3 @@
-/* Общий стиль для страницы */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -67,7 +66,7 @@ h2 {
 .blue-bar {
     width: 100%;
     height: 4px;
-    background-color: #0373fc; /* Заменен зеленый на синий */
+    background-color: #0373fc;
     margin-bottom: 20px;
 }
 
@@ -87,13 +86,13 @@ input {
 
 input:focus {
     outline: none;
-    border-color: #0373fc; /* Заменен зеленый на синий */
+    border-color: #0373fc;
 }
 
 .auth-btn {
     width: 100%;
     padding: 10px;
-    background-color: #0373fc; /* Синий цвет для кнопки */
+    background-color: #0373fc;
     color: white;
     border: none;
     border-radius: 20px;
@@ -102,7 +101,7 @@ input:focus {
 }
 
 .auth-btn:hover {
-    background-color: #0056b3; /* Темно-синий для наведения */
+    background-color: #0056b3;
 }
 
 .signup-text {
@@ -110,7 +109,7 @@ input:focus {
 }
 
 .signup-text a {
-    color: #0373fc; /* Синий цвет для ссылки */
+    color: #0373fc;
     text-decoration: none;
 }
 
@@ -125,7 +124,7 @@ input:focus {
     padding: 10px;
     text-align: center;
     color: white;
-    background-color: #4285F4; /* Синий цвет для социальных кнопок */
+    background-color: #4285F4;
     border: none;
     border-radius: 20px;
     cursor: pointer;
@@ -135,12 +134,12 @@ input:focus {
 }
 
 .social-button:hover {
-    background-color: #357ae8; /* Более темный синий при наведении */
+    background-color: #357ae8;
 }
 
 .google-button {
     background-color: #f0f0f0;
-    color: #4285F4; /* Синий цвет для текста кнопки Google */
+    color: #4285F4;
     border: 1px solid #d1d1d1;
     margin-bottom: 50px;
 }
@@ -148,4 +147,18 @@ input:focus {
 .google-button:hover {
     background-color: #e0e0e0;
     border-color: #c1c1c1;
+}
+
+
+.card {
+    border-radius: 10px;
+}
+
+form {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.btn {
+    border-radius: 15px;
 }

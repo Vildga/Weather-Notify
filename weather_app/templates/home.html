@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Weather Search{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h2 class="card-title text-center mb-4">Search Weather by City</h2>
+
+                        <form method="get" action="{% url 'city_weather' %}">
+                            <div class="mb-3">
+                                <label for="search_query" class="form-label">Enter City Name</label>
+                                <input type="text" class="form-control form-control-lg" id="search_query" name="search_query" placeholder="e.g. Kiev, Paris, New York" required>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-lg">Get Weather</button>
+                            </div>
+                        </form>
+
+                        {% if error_message %}
+                            <div class="alert alert-danger mt-3 text-center">
+                                {{ error_message }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

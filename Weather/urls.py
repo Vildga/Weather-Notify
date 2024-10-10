@@ -38,9 +38,10 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.home, name='home'),
     path('api_get_weather/', views.api_get_weather, name='api_get_weather_for_subscribed_cities'),
-    path('get_weather/', views.get_weather, name='get_weather'),
-    path('api/get-weather/<str:city_name>/', views.get_weather, name='get_weather_by_city'),
+    path('city_weather/', views.city_weather, name='city_weather'),
+    path('api/get-weather/<str:city_name>/', views.city_weather, name='get_weather_by_city'),
     path('api/', include('weather_app.urls')),
     path('registration/', views.register, name='registration'),
     path('login/', views.user_login, name='login'),

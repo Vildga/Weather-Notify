@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Weather in {{ city }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <h2>Weather in {{ city }}:</h2>
+
+            {% if temperature %}
+                <p>Current Temperature: {{ temperature }} °C</p>
+                <p>Condition: {{ description }}</p>
+            {% endif %}
+
+            {% if forecast %}
+                <h3>5-Day Forecast for {{ city }}:</h3>
+                <ul>
+                    {% for day in forecast %}
+                        <li>
+                            <strong>{{ day.date }}:</strong>
+                            {{ day.temperature }} °C, {{ day.description }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No forecast available.</p>
+            {% endif %}
+
+            {% if error %}
+                <p>{{ error }}</p>
+            {% endif %}
+
+            <form method="get" action="{% url 'home' %}">
+                {{ form }}
+                <button type="submit">Search for Another City</button>
+            </form>
+
+            <form method="post" action="{% url 'subscribe' %}">
+                {% csrf_token %}
+                <input type="hidden" name="city" value="{{ city }}">
+                <label for="period">Select Notification Period:</label>
+                <select name="period">
+                    <option value="1">1 hour</option>
+                    <option value="3">3 hours</option>
+                    <option value="6">6 hours</option>
+                    <option value="12">12 hours</option>
+                </select>
+                <label for="method">Select Notification Method:</label>
+                <select name="method">
+                    <option value="email">Email</option>
+                    <option value="push">Push Notification</option>
+                    <option value="webhook">Webhook</option>
+                </select>
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+я
