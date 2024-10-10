@@ -30,6 +30,10 @@ from rest_framework.permissions import IsAuthenticated
 from .api import SubscriptionViewSet, UserRegistrationView
 from .utils import get_weather_for_city
 import environ
+from .weather_icons import weather_icon_map
+import pytz
+from datetime import datetime
+
 
 env = environ.Env()
 environ.Env.read_env()
@@ -65,7 +69,7 @@ def city_weather(request):
     context = {}
 
     if city:
-        weather_api_key = env('WEATHER_API_KEY')
+        weather_api_key = os.getenv('WEATHER_API_KEY')
         url = f'https://api.weatherbit.io/v2.0/current?city={city}&key={weather_api_key}'
         forecast_url = f'https://api.weatherbit.io/v2.0/forecast/daily?city={city}&key={weather_api_key}&days=5'
 
@@ -76,16 +80,45 @@ def city_weather(request):
             data = response.json()
             forecast_data = forecast_response.json()
 
+            current_weather_code = data['data'][0]['weather']['code']
+            current_time = timezone.now()
+
+            # Преобразуем строки "sunrise" и "sunset" в объекты datetime
+            city_timezone = pytz.timezone(data['data'][0]['timezone'])
+            sunrise_str = data['data'][0]['sunrise']
+            sunset_str = data['data'][0]['sunset']
+
+            # Формат времени из API: "HH:MM", добавим текущую дату для правильного сравнения
+            sunrise = datetime.strptime(sunrise_str, '%H:%M').replace(
+                year=current_time.year, month=current_time.month, day=current_time.day, tzinfo=city_timezone
+            )
+            sunset = datetime.strptime(sunset_str, '%H:%M').replace(
+                year=current_time.year, month=current_time.month, day=current_time.day, tzinfo=city_timezone
+            )
+
+            # Определяем иконку в зависимости от времени суток (день или ночь)
+            if sunrise <= current_time <= sunset:
+                icon_filename = weather_icon_map.get(current_weather_code, {'day': 'default.png'})['day']
+            else:
+                icon_filename = weather_icon_map.get(current_weather_code, {'night': 'default.png'})['night']
+
+            # Передаем данные в шаблон
             context['city'] = city
             context['temperature'] = data['data'][0]['temp']
             context['description'] = data['data'][0]['weather']['description']
+            context['icon_url'] = f'https://cdn.weatherbit.io/static/img/icons/{icon_filename}'  # Иконка текущей погоды
 
+            # Прогноз на 5 дней
             forecast = []
             for entry in forecast_data['data']:
+                forecast_code = entry['weather']['code']
+                forecast_icon_filename = weather_icon_map.get(forecast_code, {'day': 'default.png'})['day']
+
                 day_forecast = {
                     'date': entry['datetime'],
                     'temperature': entry['temp'],
-                    'description': entry['weather']['description']
+                    'description': entry['weather']['description'],
+                    'icon_url': f'https://cdn.weatherbit.io/static/img/icons/{forecast_icon_filename}'  # Иконки для прогноза
                 }
                 forecast.append(day_forecast)
 

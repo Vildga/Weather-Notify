@@ -17,3 +17,4 @@ django-webpush==0.3.5
 django-push-notifications~=3.0.2
 drf-yasg~=1.21.7
 django-environ==0.11.2
+pytz~=2024.2

@@ -4,56 +4,64 @@
 
 {% block content %}
     <div class="container">
-        <div class="row">
-            <h2>Weather in {{ city }}:</h2>
+        <h2>Weather in {{ city }}:</h2>
 
-            {% if temperature %}
-                <p>Current Temperature: {{ temperature }} °C</p>
-                <p>Condition: {{ description }}</p>
-            {% endif %}
+        {% if temperature %}
+            <div class="current-weather">
+                <img class="current-weather-icon" src="{{ icon_url }}" alt="Current Weather Icon">
+                <p>Current Temperature: {{ temperature }} °C - {{ description }}</p>
+            </div>
+        {% endif %}
 
-            {% if forecast %}
-                <h3>5-Day Forecast for {{ city }}:</h3>
-                <ul>
-                    {% for day in forecast %}
-                        <li>
-                            <strong>{{ day.date }}:</strong>
-                            {{ day.temperature }} °C, {{ day.description }}
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>No forecast available.</p>
-            {% endif %}
+        {% if forecast %}
+            <h3>5-Day Forecast for {{ city }}:</h3>
+            <div class="weather-forecast">
+                {% for day in forecast %}
+                    <div class="forecast-day">
+                        <strong>{{ day.date }}</strong>
+                        <p>{{ day.temperature }}°C</p>
+                        <p>{{ day.description }}</p>
+                        <img src="{{ day.icon_url }}" alt="Forecast Icon">
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No forecast available.</p>
+        {% endif %}
 
-            {% if error %}
-                <p>{{ error }}</p>
-            {% endif %}
+        {% if error %}
+            <p>{{ error }}</p>
+        {% endif %}
 
+        <div class="text-center">
             <form method="get" action="{% url 'home' %}">
-                {{ form }}
-                <button type="submit">Search for Another City</button>
+                <button type="submit" class="btn btn-primary btn-lg">Search for Another City</button>
             </form>
+        </div>
 
+        <div class="weather-subscription">
+            <h3>Subscribe for Weather Updates</h3>
             <form method="post" action="{% url 'subscribe' %}">
                 {% csrf_token %}
                 <input type="hidden" name="city" value="{{ city }}">
+
                 <label for="period">Select Notification Period:</label>
-                <select name="period">
+                <select name="period" id="period">
                     <option value="1">1 hour</option>
                     <option value="3">3 hours</option>
                     <option value="6">6 hours</option>
                     <option value="12">12 hours</option>
                 </select>
+
                 <label for="method">Select Notification Method:</label>
-                <select name="method">
+                <select name="method" id="method">
                     <option value="email">Email</option>
                     <option value="push">Push Notification</option>
                     <option value="webhook">Webhook</option>
                 </select>
+
                 <button type="submit">Subscribe</button>
             </form>
         </div>
     </div>
 {% endblock %}
-я
