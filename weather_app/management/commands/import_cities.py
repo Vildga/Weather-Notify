@@ -13,19 +13,18 @@ class Command(BaseCommand):
         file_path = kwargs['file_path']
         with open(file_path, mode='r', encoding='utf-8') as file:
             reader = csv.reader(file)
-            next(reader)  # Пропустить заголовки
+            next(reader)
 
             for row in reader:
                 try:
-                    city_id = int(row[0])  # Преобразование city_id в число
+                    city_id = int(row[0])
                     name = row[1]
-                    state_id = int(row[2])  # Преобразование state_id в число
+                    state_id = int(row[2])
                     country_code = row[3]
                     country = row[4]
-                    latitude = float(row[5])  # Преобразование latitude в число с плавающей точкой
-                    longitude = float(row[6])  # Преобразование longitude в число с плавающей точкой
+                    latitude = float(row[5])
+                    longitude = float(row[6])
 
-                    # Создание или обновление записи в базе данных
                     City.objects.update_or_create(
                         id=city_id,
                         defaults={

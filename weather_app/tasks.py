@@ -8,11 +8,16 @@ import requests
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from .utils import get_weather_for_city
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
+
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USER = 'w41542720@gmail.com'
-EMAIL_PASSWORD = 'kimbhsqkbcuofhox'
+EMAIL_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 
 

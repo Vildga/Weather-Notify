@@ -1,6 +1,5 @@
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
-
 import os
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from .models import City, WeatherData, DefaultCity, User
@@ -83,12 +82,10 @@ def city_weather(request):
             current_weather_code = data['data'][0]['weather']['code']
             current_time = timezone.now()
 
-            # Преобразуем строки "sunrise" и "sunset" в объекты datetime
             city_timezone = pytz.timezone(data['data'][0]['timezone'])
             sunrise_str = data['data'][0]['sunrise']
             sunset_str = data['data'][0]['sunset']
 
-            # Формат времени из API: "HH:MM", добавим текущую дату для правильного сравнения
             sunrise = datetime.strptime(sunrise_str, '%H:%M').replace(
                 year=current_time.year, month=current_time.month, day=current_time.day, tzinfo=city_timezone
             )
@@ -96,19 +93,16 @@ def city_weather(request):
                 year=current_time.year, month=current_time.month, day=current_time.day, tzinfo=city_timezone
             )
 
-            # Определяем иконку в зависимости от времени суток (день или ночь)
             if sunrise <= current_time <= sunset:
                 icon_filename = weather_icon_map.get(current_weather_code, {'day': 'default.png'})['day']
             else:
                 icon_filename = weather_icon_map.get(current_weather_code, {'night': 'default.png'})['night']
 
-            # Передаем данные в шаблон
             context['city'] = city
             context['temperature'] = data['data'][0]['temp']
             context['description'] = data['data'][0]['weather']['description']
-            context['icon_url'] = f'https://cdn.weatherbit.io/static/img/icons/{icon_filename}'  # Иконка текущей погоды
+            context['icon_url'] = f'https://cdn.weatherbit.io/static/img/icons/{icon_filename}'
 
-            # Прогноз на 5 дней
             forecast = []
             for entry in forecast_data['data']:
                 forecast_code = entry['weather']['code']
@@ -118,7 +112,7 @@ def city_weather(request):
                     'date': entry['datetime'],
                     'temperature': entry['temp'],
                     'description': entry['weather']['description'],
-                    'icon_url': f'https://cdn.weatherbit.io/static/img/icons/{forecast_icon_filename}'  # Иконки для прогноза
+                    'icon_url': f'https://cdn.weatherbit.io/static/img/icons/{forecast_icon_filename}'
                 }
                 forecast.append(day_forecast)
 
@@ -181,7 +175,7 @@ def subscription_list_api(request):
 
 def user_login(request):
     if request.user.is_authenticated:
-        messages.success(request, 'Ви вже увійшли до системи.')
+        messages.success(request, 'You are already logged in.')
         return redirect('')
 
     if request.method == 'POST':
@@ -195,7 +189,7 @@ def user_login(request):
                 login(request, user)
                 return redirect('')
             else:
-                messages.error(request, 'Неправильний логін чи пароль.')
+                messages.error(request, 'Incorrect login or password.')
     else:
         form = AuthenticationForm()
 

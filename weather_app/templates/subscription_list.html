@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load static webpush_notifications %}
+
 
 {% block content %}
     <h2>Your Subscriptions</h2>
@@ -17,10 +19,14 @@
         <ul>
         {% for subscription in subscriptions %}
             <li id="{{ subscription.city }}">
-                {{ subscription.city }} - <span class="temperature">Завантаження...</span>
+                {{ subscription.city }} - <span class="temperature">Download...</span>
             </li>
         {% endfor %}
         </ul>
+
+        <div id="webpush-container">
+            {% webpush_button %}
+        </div>
 
         <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -33,16 +39,29 @@
                 .then(data => {
                     const temperatureElement = listItem.querySelector('.temperature');
                     if ('temperature' in data) {
-                        temperatureElement.innerText = `Температура: ${data.temperature}°C`;
+                        temperatureElement.innerText = `Temperature: ${data.temperature}°C`;
                     } else {
-                        temperatureElement.innerText = `Помилка: ${data.error}`;
+                        temperatureElement.innerText = `Error: ${data.error}`;
                     }
                 })
                 .catch(error => {
-                    console.error(`Помилка під час виконання запиту для міста ${city}:`, error);
+                    console.error(`Error while executing a query for a city ${city}:`, error);
                 });
             });
         });
         </script>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const pushButton = document.querySelector("#webpush-container button");
+
+                if (pushButton) {
+                    pushButton.click();
+
+                    document.getElementById("webpush-container").style.display = "none";
+                }
+            });
+        </script>
     </ul>
+
 {% endblock %}
