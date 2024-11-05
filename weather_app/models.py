@@ -33,6 +33,14 @@ class Subscription(models.Model):
 
 class City(models.Model):
     name = models.CharField(max_length=255)
+    state_id = models.IntegerField(null=True, blank=True)
+    country_code = models.CharField(max_length=5)
+    country = models.CharField(max_length=255)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+
+    def __str__(self):
+        return self.name
 
 
 class WeatherData(models.Model):
