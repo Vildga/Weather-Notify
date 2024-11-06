@@ -48,7 +48,8 @@ def get_weather_for_city(city_name):
 
         if 'data' in weather_data and weather_data['data']:
             temperature = weather_data['data'][0]['temp']
-            return {'city_data': city_data, 'temperature': temperature}
+            description = weather_data['data'][0]['weather']['description']
+            return {'city_data': city_data, 'temperature': temperature, 'description': description}
         else:
             return None
 

@@ -31,8 +31,12 @@ def send_notifications():
         if last_notification_time is None or timezone.now() - last_notification_time >= timezone.timedelta(
                 hours=int(subscription.period)):
             weather_data = get_weather_for_city(subscription.city)
-            temperature_info = f'The current temperature is {weather_data["temperature"]}°C.' if (
-                weather_data) else 'Temperature information not available.'
+            if weather_data:
+                temperature = weather_data.get("temperature", "not available")
+                description = weather_data.get("description", "Description not available")
+                temperature_info = f'The current temperature is {temperature}°C. Description: {description}.'
+            else:
+                temperature_info = 'Temperature information not available.'
 
             if subscription.method == 'email':
                 send_email_notification(subscription.user, subscription.city, temperature_info)
