@@ -2,14 +2,11 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 import os
 from django.shortcuts import render, redirect, get_object_or_404, reverse
-from .models import City, WeatherData, DefaultCity, User
-from .forms import CitySearchForm
+from .models import City, User
 import requests
 import csv
-from rest_framework import generics, permissions
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers.serializers import UserSerializer, SubscriptionSerializer
+from .serializers.serializers import  SubscriptionSerializer
 from django.contrib.auth.decorators import login_required
 from .models import Subscription
 from .forms import SubscriptionForm, RegistrationForm
@@ -18,16 +15,11 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate
 from django.utils import timezone
 from django.contrib.auth import logout
-from weather_app.tasks import send_notifications, send_notifications
 from .models import Notification
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
 import json
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from .api import SubscriptionViewSet, UserRegistrationView
-from .utils import get_weather_for_city
+from rest_framework.decorators import api_view
 import environ
 from .weather_icons import weather_icon_map
 import pytz
@@ -237,33 +229,9 @@ def api_get_weather(request):
 
         if 'data' in weather_data and weather_data['data']:
             temperature = weather_data['data'][0]['temp']
-            return JsonResponse({'temperature': temperature, 'city': city_name})
+            description = weather_data['data'][0]['weather']['description']
+            return JsonResponse({'temperature': temperature, 'city': city_name, 'description': description})
         else:
             return JsonResponse({'error': 'Weather data not found for the city'})
     else:
         return JsonResponse({'error': 'City not found'})
-
-
-@csrf_exempt
-def webhook_receiver(request, user_id):
-    if request.method == 'POST':
-        user = get_object_or_404(User, id=user_id)
-
-        try:
-            data = json.loads(request.body.decode('utf-8'))
-
-            city_name = data.get('city')
-            city = get_object_or_404(City, name=city_name)
-
-            notification = Notification.objects.create(
-                user=user,
-                city=city,
-                content=data.get('content'),
-            )
-
-            return JsonResponse({'status': 'success', 'notification_id': notification.id})
-        except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-        else:
-            return JsonResponse({'status': 'error', 'message': 'Method Not Allowed'}, status=405)
-

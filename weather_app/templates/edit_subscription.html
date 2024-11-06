@@ -2,7 +2,7 @@
 
 {% block content %}
     <h2>Edit Subscription</h2>
-    <form method="post">
+    <form method="post" class="edit-subscription-form">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Save Changes</button>

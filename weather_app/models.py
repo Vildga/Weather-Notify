@@ -5,8 +5,6 @@ from django.conf import settings
 
 
 class User(AbstractUser):
-    jwt_token = models.CharField(max_length=255, blank=True, null=True)
-    webhook_url = models.URLField(blank=True, null=True)
 
     class Meta:
         swappable = 'AUTH_USER_MODEL'
@@ -25,7 +23,6 @@ class Subscription(models.Model):
     method_choices = [
         ('email', 'Email'),
         ('push', 'Push Notification'),
-        ('webhook', 'Webhook'),
     ]
     method = models.CharField(max_length=10, choices=method_choices)
     last_notification_time = models.DateTimeField(null=True, blank=True)

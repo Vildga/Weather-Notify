@@ -5,7 +5,7 @@ from weather_app.models import User, Subscription
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'jwt_token']
+        fields = ['id', 'username', 'email',]
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):

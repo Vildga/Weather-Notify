@@ -40,9 +40,6 @@ def send_notifications():
             elif subscription.method == 'push':
                 send_push_notification(subscription.user, subscription.city, temperature_info)
 
-            elif subscription.method == 'webhook':
-                send_webhook_notification(subscription.user, subscription.city, temperature_info)
-
             if weather_data and 'city_data' in weather_data:
                 city_data = weather_data['city_data']
                 if city_data:
@@ -75,33 +72,3 @@ def send_push_notification(user, city, temperature_info):
     payload = {"head": "Weather Notification", "body": f'This is a weather notification for {city}.\n{temperature_info}'}
     send_user_notification(user=user, payload=payload, ttl=1000)
 
-
-# app.conf.beat_schedule = {
-#     'send-notifications': {
-#         'task': 'Weather.tasks.send_notifications',
-#         'schedule': crontab(),
-#     },
-# }
-
-
-def send_webhook_notification(user, city, temperature_info):
-    webhook_url = user.webhook_url
-
-    if webhook_url:
-        weather_data = get_weather_for_city(city)
-
-        if weather_data:
-            payload = {
-                "head": "Weather Notification",
-                "body": f'Weather notification for {city}. {temperature_info}',
-            }
-            response = requests.post(webhook_url, json=payload)
-
-            if response.status_code == 200:
-                print("Webhook notification sent successfully.")
-            else:
-                print(f"Failed to send webhook notification. Status code: {response.status_code}")
-        else:
-            print(f"Weather data not found for {city}.")
-    else:
-        print("User has no webhook URL.")

@@ -2,35 +2,43 @@
 {% load static %}
 {% load static webpush_notifications %}
 
-
 {% block content %}
     <h2>Your Subscriptions</h2>
-    <ul>
+
+    <ul class="subscription-list">
         {% for subscription in subscriptions %}
             <li>
-                {{ subscription.city }} ({{ subscription.get_period_display }}) - {{ subscription.get_method_display }}
-                <a href="{% url 'edit_subscription' subscription.id %}">Edit</a>
-                <a href="{% url 'delete_subscription' subscription.id %}">Delete</a>
+                <span>{{ subscription.city }} ({{ subscription.get_period_display }}) - {{ subscription.get_method_display }}</span>
+                <span>
+                    <a href="{% url 'edit_subscription' subscription.id %}">Edit</a>
+                    <a href="{% url 'delete_subscription' subscription.id %}">Delete</a>
+                </span>
             </li>
         {% endfor %}
+    </ul>
 
-        <hr> {# розділяюча полоса#}
+    <hr>
 
-        <ul>
+    <ul class="subscription-list">
         {% for subscription in subscriptions %}
             <li id="{{ subscription.city }}">
-                {{ subscription.city }} - <span class="temperature">Download...</span>
+                {{ subscription.city }} -
+                <span class="weather-info">
+                    <span class="temperature">Loading...</span>
+                    <span class="description">Fetching description...</span>
+                </span>
             </li>
         {% endfor %}
-        </ul>
+    </ul>
 
-        <div id="webpush-container">
-            {% webpush_button %}
-        </div>
 
-        <script>
+    <div id="webpush-container">
+        {% webpush_button %}
+    </div>
+
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('ul li').forEach(function(listItem) {
+            document.querySelectorAll('ul.subscription-list li').forEach(function(listItem) {
                 const city = listItem.id;
                 fetch(`/api_get_weather/?search_query=${city}`, {
                     method: 'GET',
@@ -38,30 +46,35 @@
                 .then(response => response.json())
                 .then(data => {
                     const temperatureElement = listItem.querySelector('.temperature');
-                    if ('temperature' in data) {
+                    const descriptionElement = listItem.querySelector('.description');
+                    const separator = listItem.querySelector('.separator');
+
+                    if ('temperature' in data && 'description' in data) {
                         temperatureElement.innerText = `Temperature: ${data.temperature}°C`;
+                        descriptionElement.innerText = `Description: ${data.description}`;
+                        separator.style.display = 'inline';
                     } else {
                         temperatureElement.innerText = `Error: ${data.error}`;
+                        descriptionElement.innerText = '';
+                        separator.style.display = 'none';
                     }
                 })
                 .catch(error => {
-                    console.error(`Error while executing a query for a city ${city}:`, error);
+                    console.error(`Error while executing a query for city ${city}:`, error);
                 });
             });
         });
-        </script>
+    </script>
 
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                const pushButton = document.querySelector("#webpush-container button");
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const pushButton = document.querySelector("#webpush-container button");
 
-                if (pushButton) {
-                    pushButton.click();
-
-                    document.getElementById("webpush-container").style.display = "none";
-                }
-            });
-        </script>
-    </ul>
+            if (pushButton) {
+                pushButton.click();
+                document.getElementById("webpush-container").style.display = "none";
+            }
+        });
+    </script>
 
 {% endblock %}
